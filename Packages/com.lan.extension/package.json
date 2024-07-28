@@ -1,0 +1,20 @@
+{
+  "name": "com.lan.extension",
+  "version": "2.0.0",
+  "displayName": "Unity C# Extension",
+  "description": "Unity C# Extension Code",
+  "unity": "2020.3",
+  "dependencies": {
+    "com.dbrizov.naughtyattributes": "2.1.4"
+  },
+  "keywords": [
+    "extension",
+    "helper",
+    "c#"
+  ],
+  "author": {
+    "name": "Erlan Kurnia",
+    "email": "erlank2789@gmail.com",
+    "url": "https://erlankurnia.github.io"
+  }
+}
