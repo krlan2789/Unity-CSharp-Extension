@@ -1,4 +1,4 @@
-﻿using LAN.Helper;
+﻿using LAN.Extension;
 using System;
 using System.Collections.Generic;
 
@@ -59,20 +59,11 @@ namespace LAN.Helper {
         private static byte[] StringToBytes(string text) {
             List<byte> code = new List<byte>();
 
-            foreach (string st in Tools.SplitString(text, 3)) {
+            foreach (string st in text.SplitString(3)) {
                 code.Add(Convert.ToByte(st));
             }
 
             return code.ToArray();
         }
-
-        //private static string[] SplitString(string text, byte charCount) {
-        //    List<string> listString = new List<string>();
-        //    for (short i = 0; i < text.Length; i += charCount) {
-        //        listString.Add(text.Substring(i, charCount));
-        //    }
-
-        //    return listString.ToArray();
-        //}
     }
 }

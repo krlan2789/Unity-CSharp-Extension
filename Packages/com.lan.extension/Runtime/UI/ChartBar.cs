@@ -1,3 +1,4 @@
+using LAN.Extension;
 using LAN.Helper;
 using System.Collections;
 using System.Collections.Generic;
@@ -52,7 +53,7 @@ namespace LAN.UI {
                     highestValue /= 1_000;
                     //stepLabel.text = stepLabel.text.Substring(0, stepLabel.text.Length - 4) + "k";
                 }
-                stepLabel.text = Tools.ToMoney("" + (a * (highestValue / (uint)stepsLabel.Count)), false, false);
+                stepLabel.text = ("" + (a * (highestValue / (uint)stepsLabel.Count))).ToMoney("", false);
                 a++;
             }
             //  Value per steps
@@ -71,12 +72,12 @@ namespace LAN.UI {
                 
                 //  Primary value
                 item.Value.transform.Find("Fill").GetComponent<Image>().fillAmount = (float)datum.primaryValue / highestValue;
-                item.Value.transform.Find("Value1").GetComponent<Text>().text = Tools.ToMoney("" + datum.primaryValue, false, false);
+                item.Value.transform.Find("Value1").GetComponent<Text>().text = ("" + datum.primaryValue).ToMoney("", false);
 
                 //  Secondary value
                 item.Value.fillAmount = (float)datum.secondaryValue / highestValue;
                 var value2 = item.Value.transform.Find("Value2").GetComponent<Text>();
-                value2.text = Tools.ToMoney("" + datum.secondaryValue, false, false);
+                value2.text = ("" + datum.secondaryValue).ToMoney("", false);
                 if (datum.secondaryValue <= 0) Destroy(value2.gameObject);
                 else {
                     var value2Rect = value2.GetComponent<RectTransform>();

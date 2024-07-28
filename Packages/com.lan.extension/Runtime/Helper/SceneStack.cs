@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LAN.Scene {
     public class SceneStack {
-        private static Stack<string> scenesStack = new Stack<string>();
+        private static readonly Stack<string> scenesStack = new Stack<string>();
 
         public static void Clear() {
             Debug.Log("scenesStack.Clear()");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LAN.Data;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 

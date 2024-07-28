@@ -1,29 +1,35 @@
-﻿using LAN.Data;
+﻿using LAN.Extension;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Android;
 
-namespace LAN {
-    public class LocalStorage : CustomBehaviour {
+namespace LAN.Data {
+    public class LocalStorage {
         #region Static attribute from this class
-        private static LocalStorage instance;
-        public static LocalStorage Instance {
-            get {
-                instance = instance == null ? FindObjectOfType<LocalStorage>() : instance;
-                return instance;
-            }
-        }
+        //private static LocalStorage instance;
+        //public static LocalStorage Instance
+        //{
+        //    get
+        //    {
+        //        //instance = instance == null ? FindObjectOfType<LocalStorage>() : instance;
+        //        instance ??= new LocalStorage();
+        //        return instance;
+        //    }
+        //}
         #endregion
 
-        private void Start() {
-            bool hasPermission = Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite);
-            if (hasPermission) {
-                Permission.RequestUserPermission(Permission.ExternalStorageWrite);
-            }
-        }
+        //public LocalStorage()
+        //{
+        //    if (Application.platform == RuntimePlatform.Android)
+        //    {
+        //        bool hasPermission = Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite);
+        //        if (hasPermission) {
+        //            Permission.RequestUserPermission(Permission.ExternalStorageWrite);
+        //        }
+        //    }
+        //}
 
         #region Basic CRUD to persistend data path
         /// <summary>
@@ -35,7 +41,7 @@ namespace LAN {
             string path = Application.persistentDataPath + "/cookies/";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             //return path + DataSecure.Encode(fileName) + ".r";
-            return path + (string.IsNullOrEmpty(fileName) ? "" : DataSecure.Encode(fileName) + ".r");
+            return path + (fileName.IsEmpty() ? "" : DataSecure.Encode(fileName) + ".r");
         }
 
         /// <summary>
@@ -47,7 +53,7 @@ namespace LAN {
         public static string GetLocalPath(string directory, string fileName) {
             string path = Application.persistentDataPath + "/cookies/" + directory.Trim('/') + "/";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            var _path = path + (string.IsNullOrEmpty(fileName) ? "" : DataSecure.Encode(fileName) + ".r");
+            var _path = path + (fileName.IsEmpty() ? "" : DataSecure.Encode(fileName) + ".r");
             //Debug.Log("GetLocalPath: " + _path);
             return _path;
         }
@@ -58,7 +64,7 @@ namespace LAN {
         /// <param name="filename">Fill this param for deleting spesific file</param>
         public static void Clear(string filename = null, bool clearFile = true) {
             try {
-                if (!string.IsNullOrEmpty(filename) && clearFile) {
+                if (filename.IsNotEmpty() && clearFile) {
                     if (!File.Exists(GetLocalPath(filename))) {
                         Debug.LogWarning("File " + GetLocalPath(filename) + " doesn't exist");
                         return;
@@ -66,7 +72,7 @@ namespace LAN {
                     File.Delete(GetLocalPath(filename));
                 } else {
                     string dir = Application.persistentDataPath + "/cookies/";
-                    if (!string.IsNullOrEmpty(filename)) dir += filename + "/";
+                    if (filename.IsNotEmpty()) dir += filename + "/";
                     if (!Directory.Exists(Application.persistentDataPath + "/cookies/")) {
                         Debug.LogWarning("Directory " + dir + " doesn't exist");
                         return;
@@ -85,7 +91,7 @@ namespace LAN {
         /// <param name="data"></param>
         public static void Write(string filePath, string data) {
             try {
-                if (!string.IsNullOrEmpty(filePath)) {
+                if (filePath.IsNotEmpty()) {
                     if (File.Exists(filePath)) File.Delete(filePath);
                     //string dir = string.Join("/", new List<string>(filePath.Replace("\\", "/").Split('/')).GetRange(0, -1).ToArray());
                     //Debug.Log(dir);
