@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LAN.Helper;
+using System;
 using System.Net;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -33,7 +34,7 @@ namespace LAN {
             try {
                 DownloadFile(imagePath, image, Callback);
             } catch (Exception e) {
-                ErrorHandler.Record(imagePath, e.Message, "Error When Loading an Image", SceneManager.GetActiveScene().name, callerObject?.name);
+                Debug.LogError($"{imagePath}, {e.Message}, Error When Loading an Image, {SceneManager.GetActiveScene().name}");
             }
         }
 

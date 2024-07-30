@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LAN.Quality {
+namespace LAN.Helper {
 
     [Serializable]
     public struct DisplaySetting {

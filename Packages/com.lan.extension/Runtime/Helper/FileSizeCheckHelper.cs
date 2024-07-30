@@ -5,17 +5,17 @@ using UnityEngine.Networking;
 
 namespace LAN.Helper
 {
-    public class FileSizeChecker : MonoBehaviour
+    public class FileSizeCheckHelper : MonoBehaviour
     {
-        private static FileSizeChecker instance;
-        public static FileSizeChecker Instance
+        private static FileSizeCheckHelper instance;
+        public static FileSizeCheckHelper Instance
         {
             get
             {
-                instance ??= FindObjectOfType<FileSizeChecker>();
+                instance ??= FindObjectOfType<FileSizeCheckHelper>();
                 if (instance == null)
                 {
-                    instance = new GameObject("FileSizeChecker").AddComponent<FileSizeChecker>();
+                    instance = new GameObject("FileSizeCheckHelper").AddComponent<FileSizeCheckHelper>();
                 }
                 return instance;
             }

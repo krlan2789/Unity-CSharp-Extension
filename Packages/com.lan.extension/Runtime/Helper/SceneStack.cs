@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace LAN.Scene {
+namespace LAN.Helper {
     public class SceneStack {
         private static readonly Stack<string> scenesStack = new Stack<string>();
 

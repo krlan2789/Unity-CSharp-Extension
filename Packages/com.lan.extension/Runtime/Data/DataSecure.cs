@@ -4,7 +4,6 @@ namespace LAN.Data
 {
     public class DataSecure
     {
-
         /// <summary>
         /// Encode plain text to Base64
         /// </summary>

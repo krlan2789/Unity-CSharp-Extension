@@ -2,9 +2,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace LAN.Helper {
-
-    public static class ER1 {
+namespace LAN.Helper
+{
+    public static class ER1
+    {
         //private static string allAsciiChar = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r\x0b\x0c";
         //private static string asciiLetters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         //private static string digits = "0123456789";
@@ -15,25 +16,32 @@ namespace LAN.Helper {
         /// </summary>
         /// <param name="plainText">Plain text to be encrypted</param>
         /// <returns>String of cipher text</returns>
-        public static string Encrypt(string plainText, byte key = 0) {
+        public static string Encrypt(string plainText, byte key = 0)
+        {
             byte[] code = new byte[plainText.Length];
 
-            for (int i = 0; i < plainText.Length; i++) {
+            for (int i = 0; i < plainText.Length; i++)
+            {
                 code[i] = (byte)(Convert.ToByte(plainText[i]) + key);
             }
 
             return BytesToString(code);
         }
 
-        private static string BytesToString(byte[] code) {
+        private static string BytesToString(byte[] code)
+        {
             string text = "";
 
-            foreach (byte b in code) {
-                if (b < 10) {
+            foreach (byte b in code)
+            {
+                if (b < 10)
+                {
                     text += "00" + b;
-                } else if (b < 100) {
+                } else if (b < 100)
+                {
                     text += "0" + b;
-                } else {
+                } else
+                {
                     text += "" + b;
                 }
             }
@@ -46,20 +54,24 @@ namespace LAN.Helper {
         /// </summary>
         /// <param name="cipherText">Cipher text to be decrypted</param>
         /// <returns>String of plain text</returns>
-        public static string Decrypt(string cipherText, byte key = 0) {
+        public static string Decrypt(string cipherText, byte key = 0)
+        {
             string plainText = "";
 
-            foreach (byte b in StringToBytes(cipherText)) {
+            foreach (byte b in StringToBytes(cipherText))
+            {
                 plainText += Convert.ToChar(b - key);
             }
 
             return plainText;
         }
 
-        private static byte[] StringToBytes(string text) {
+        private static byte[] StringToBytes(string text)
+        {
             List<byte> code = new List<byte>();
 
-            foreach (string st in text.SplitString(3)) {
+            foreach (string st in text.SplitString(3))
+            {
                 code.Add(Convert.ToByte(st));
             }
 

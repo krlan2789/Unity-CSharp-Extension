@@ -1,14 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Globalization;
-using UnityEngine.UI;
 
 
 namespace LAN.Helper {
@@ -55,17 +47,6 @@ namespace LAN.Helper {
             }
 
             return result.ToArray();
-        }
-
-        public static string GetPlatform() {
-            string device = "PC";
-            if (Application.platform == RuntimePlatform.Android) {
-                device = "ANDROID";
-            } else if (Application.platform == RuntimePlatform.IPhonePlayer) {
-                device = "iPHONE";
-            }
-
-            return device;
         }
 
         public static int GetRelativeKeyboardHeight(this RectTransform rectTransform, bool includeInput)
