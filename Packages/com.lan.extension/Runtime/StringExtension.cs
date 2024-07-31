@@ -23,6 +23,10 @@ namespace LAN.Extension
             return listString.ToArray();
         }
 
+        /// <summary>
+        /// Copy text to clipboard
+        /// </summary>
+        /// <param name="text"></param>
         public static void CopyToClipboard(this string text)
         {
             TextEditor te = new() { text = text };
@@ -63,11 +67,11 @@ namespace LAN.Extension
                             a = 1;
                             t = s[0].ToString();
                         }
-                        text += t + s[a].ToString().ToUpper() + s.Substring(a + 1) + " ";
+                        text += t + s[a].ToString().ToUpper() + s[(a + 1)..] + " ";
                     }
                 } else
                 {
-                    text = text[0].ToString().ToUpper() + text.Substring(1);
+                    text = text[0].ToString().ToUpper() + text[1..];
                 }
             }
             return text;

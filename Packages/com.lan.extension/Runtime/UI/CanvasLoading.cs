@@ -6,8 +6,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace LAN.UI {
-    public class CanvasLoading : CustomBehaviour {
+namespace LAN.UI
+{
+    public class CanvasLoading : MonoBehaviour
+    {
         [SerializeField] private Transform panel, offsetPos, onsitePos;
         [SerializeField] private Transform logo;
         [SerializeField] private GameObject panelTooLong;
@@ -19,40 +21,47 @@ namespace LAN.UI {
         private float defaultTimeOut = 30;
         private float currentTimeOut = 30;
 
-        private void Awake() {
+        private void Awake()
+        {
             anim = panel.GetComponent<AnimManager>();
         }
 
-        private void Start() {
+        private void Start()
+        {
             isShow = true;
             //panel.position = offsetPos.position;
             forceStopBtn.onClick.AddListener(() => {
                 //panelTooLong.SetActive(false);
-                LoadIsDone(true);
                 Hide();
             });
             panelTooLong.SetActive(false);
         }
 
-        private void Update() {
-            if (DateTime.Now.Subtract(startTime).TotalSeconds >= currentTimeOut && !panelTooLong.activeInHierarchy) {
+        private void Update()
+        {
+            if (DateTime.Now.Subtract(startTime).TotalSeconds >= currentTimeOut && !panelTooLong.activeInHierarchy)
+            {
                 panelTooLong.SetActive(true);
             }
         }
 
-        public void SetTimeOutTemporary(float timeOut) {
-            if (currentTimeOut < timeOut) {
+        public void SetTimeOutTemporary(float timeOut)
+        {
+            if (currentTimeOut < timeOut)
+            {
                 currentTimeOut = timeOut;
                 Debug.LogWarning($"Set timeout to {currentTimeOut} seconds");
             }
         }
 
-        public void ResetTimeOut() {
+        public void ResetTimeOut()
+        {
             currentTimeOut = defaultTimeOut;
             Debug.LogWarning($"Reset timeout to {currentTimeOut} seconds");
         }
 
-        public void Show() {
+        public void Show()
+        {
             if (isShow) return;
             panelTooLong.SetActive(false);
             isShow = true;
@@ -61,7 +70,8 @@ namespace LAN.UI {
             StartCoroutine(Moving(onsitePos));
         }
 
-        public void Hide() {
+        public void Hide()
+        {
             if (!isShow) return;
             isShow = false;
             startTime = new DateTime();
@@ -69,25 +79,31 @@ namespace LAN.UI {
             StartCoroutine(Moving(offsetPos));
         }
 
-        private IEnumerator Moving(Transform target) {
+        private IEnumerator Moving(Transform target)
+        {
             //panel.gameObject.SetActive(true);
             yield return null;
-            if (anim != null) {
-                if (isShow) {
+            if (anim != null)
+            {
+                if (isShow)
+                {
                     anim.SetScaleSetting(0f, .1f, () => OnAnimationDone(isShow), () => OnAnimationDone(false));
                     anim.StartScale(AnimationScaleType.ScaleUpY);
-                } else {
+                } else
+                {
                     anim.SetScaleSetting(.5f, .35f, null, () => OnAnimationDone(isShow));
                     anim.StartScale(AnimationScaleType.ScaleDownY);
                 }
             }
         }
 
-        private void OnAnimationDone(bool status) {
+        private void OnAnimationDone(bool status)
+        {
             //panel.gameObject.SetActive(isShow);
-            if (logo.TryGetComponent(out ShakeAroundAnimation anim)) {
+            if (logo.TryGetComponent(out ShakeAroundAnimation anim))
+            {
                 anim.enabled = status;
             }
         }
-}
+    }
 }

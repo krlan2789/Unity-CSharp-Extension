@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace LAN {
-    public abstract class ExtendedBehaviour : MonoBehaviour {
+namespace LAN.Extension
+{
+    public static class MonoBehaviourExtension
+    {
         /// <summary>
         /// Delete all child of parent
         /// </summary>
         /// <param name="parent"></param>
-        protected void ClearChildren(Transform parent) {
-            if (parent != null) {
-                foreach (Transform obj in parent) {
-                    Destroy(obj.gameObject);
+        public static void ClearChildren(this MonoBehaviour thisBehaviour, Transform parent)
+        {
+            if (parent != null)
+            {
+                foreach (Transform obj in parent)
+                {
+                    Object.Destroy(obj.gameObject);
                 }
             }
         }
@@ -24,32 +29,17 @@ namespace LAN {
         /// <param name="path">Path to target gameobject</param>
         /// <param name="parent">Parent of target gameobject</param>
         /// <returns></returns>
-        protected T FindObject<T>(string path, Transform parent = null) where T : Object {
-            if (parent != null) {
+        public static T FindObject<T>(this MonoBehaviour thisBehaviour, string path, Transform parent = null) where T : Object
+        {
+            if (parent != null)
+            {
                 if (parent.Find(path) == null) return null;
                 return parent.Find(path).GetComponent<T>();
-            } else {
-                if (transform.Find(path) == null) return null;
-                return transform.Find(path).GetComponent<T>();
+            } else
+            {
+                if (thisBehaviour.transform.Find(path) == null) return null;
+                return thisBehaviour.transform.Find(path).GetComponent<T>();
             }
-        }
-
-        /// <summary>
-        /// Load object inside Resources folder
-        /// </summary>
-        /// <param name="path">Location target prefab object</param>
-        /// <returns></returns>
-        protected Object LoadRes(string path) {
-            return Resources.Load(path);
-        }
-
-        /// <summary>
-        /// Load object inside Resources folder using static method
-        /// </summary>
-        /// <param name="path">Location target prefab object</param>
-        /// <returns></returns>
-        protected static Object LoadResStatic(string path) {
-            return Resources.Load(path);
         }
 
         /// <summary>
@@ -58,8 +48,9 @@ namespace LAN {
         /// <param name="prefabPath">Path to prefab</param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        protected GameObject CreateObject(string prefabPath, Transform parent) {
-            return Instantiate((GameObject)LoadRes(prefabPath), parent.position, Quaternion.identity, parent);
+        public static GameObject CreateObject(this GameObject thisObj, string prefabPath, Transform parent)
+        {
+            return Object.Instantiate((GameObject)Resources.Load(prefabPath), parent.position, Quaternion.identity, parent);
         }
 
         /// <summary>
@@ -68,8 +59,9 @@ namespace LAN {
         /// <param name="prefab">Prefab object</param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        protected GameObject CreateObject(GameObject prefab, Transform parent) {
-            return Instantiate(prefab, parent.position, Quaternion.identity, parent);
+        public static GameObject CreateObject(this GameObject prefab, Transform parent)
+        {
+            return Object.Instantiate(prefab, parent.position, Quaternion.identity, parent);
         }
 
         /// <summary>
@@ -79,9 +71,10 @@ namespace LAN {
         /// <param name="prefab"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        protected T CreateObject<T>(T prefab, Transform parent) where T : Object {
-            if (parent != null) return Instantiate(prefab, parent.position, Quaternion.identity, parent);
-            else return Instantiate(prefab);
+        public static T CreateObject<T>(this T prefab, Transform parent) where T : Object
+        {
+            if (parent != null) return Object.Instantiate(prefab, parent.position, Quaternion.identity, parent);
+            else return Object.Instantiate(prefab);
         }
 
         /// <summary>
@@ -92,40 +85,9 @@ namespace LAN {
         /// <param name="position"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        protected T CreateObject<T>(T prefab, Vector3 position, Transform parent) where T : Object {
-            return Instantiate(prefab, position, Quaternion.identity, parent);
-        }
-
-        /// <summary>
-        /// Copy text to clipboard
-        /// </summary>
-        /// <param name="text"></param>
-        protected void CopyToClipboard(string text) {
-            TextEditor te = new TextEditor { text = text };
-            te.SelectAll();
-            te.Copy();
-            Debug.Log("Text copied!");
-        }
-
-        /// <summary>
-        /// Capitalize first letter in each word or first word only
-        /// </summary>
-        /// <param name="sentence">Sentence source</param>
-        /// <param name="allWord">All word / First word only</param>
-        /// <param name="sparator">Sparator </param>
-        /// <returns></returns>
-        protected string Capitalize(string sentence, bool allWord = true, char sparator = ' ') {
-            if (string.IsNullOrEmpty(sentence)) return sentence;
-            string results = "";
-            if (allWord && sentence.Contains(sparator)) {
-                string[] words = sentence.Split(sparator);
-                foreach (string w in words) {
-                    results += w[0].ToString().ToUpper() + w[1..].ToLower() + sparator;
-                }
-            } else {
-                results = sentence[0].ToString().ToUpper() + sentence[1..].ToLower();
-            }
-            return results.Substring(0, results.Length);
+        public static T CreateObject<T>(this T prefab, Vector3 position, Transform parent) where T : Object
+        {
+            return Object.Instantiate(prefab, position, Quaternion.identity, parent);
         }
 
         /// <summary>
@@ -134,14 +96,17 @@ namespace LAN {
         /// <param name="layoutObject"></param>
         /// <param name="fixHeight"></param>
         /// <param name="duration"></param>
-        protected void FixVerticalLayout(Transform layoutObject, bool fixHeight = true, float duration = .0005f) {
-            StartCoroutine(FixingVerticalLayout(layoutObject, fixHeight, duration));
+        public static void FixVerticalLayout(this MonoBehaviour thisBehaviour, Transform layoutObject, bool fixHeight = true, float duration = .0005f)
+        {
+            thisBehaviour.StartCoroutine(FixingVerticalLayout(thisBehaviour, layoutObject, fixHeight, duration));
         }
 
-        protected IEnumerator FixingVerticalLayout(Transform layoutObject, bool fixHeight, float duration) {
+        public static IEnumerator FixingVerticalLayout(this MonoBehaviour thisBehaviour, Transform layoutObject, bool fixHeight, float duration)
+        {
             if (layoutObject == null) yield break;
             VerticalLayoutGroup lg = layoutObject.GetComponent<VerticalLayoutGroup>();
-            if (fixHeight) {
+            if (fixHeight)
+            {
                 bool forceHeight = lg.childForceExpandHeight;
                 bool controlHeight = lg.childControlHeight;
 
@@ -150,7 +115,8 @@ namespace LAN {
                 yield return new WaitForSecondsRealtime(duration);
                 if (forceHeight) lg.childForceExpandHeight = forceHeight;
                 if (controlHeight) lg.childControlHeight = controlHeight;
-            } else {
+            } else
+            {
                 bool forceWidth = lg.childForceExpandWidth;
                 bool controlWidth = lg.childControlWidth;
 
@@ -162,28 +128,33 @@ namespace LAN {
             }
         }
 
-        public Coroutine SetMaxSize(Component le) {
+        public static Coroutine SetMaxSize(this MonoBehaviour thisBehaviour, Component le)
+        {
             Transform parent = le.transform.parent;
             if (parent == null) throw new System.NotSupportedException("This instance is root parent");
             Vector2 size = parent.GetComponent<RectTransform>().sizeDelta;
-            return SetMaxSize(le, size);
+            return thisBehaviour.SetMaxSize(le, size);
         }
 
-        public Coroutine SetMaxSize(Component com, Vector2 size) {
+        public static Coroutine SetMaxSize(this MonoBehaviour thisBehaviour, Component com, Vector2 size)
+        {
             LayoutElement le = com.GetComponent<LayoutElement>();
             if (le == null) throw new System.NotSupportedException("This instance must have LayoutElement component");
             RectTransform rt = le.GetComponent<RectTransform>();
             if (rt == null) throw new System.NotSupportedException("This instance must have RectTransform component");
-            return StartCoroutine(SettingMaxSize(le, rt, size));
+            return thisBehaviour.StartCoroutine(thisBehaviour.SettingMaxSize(le, rt, size));
         }
 
-        private IEnumerator SettingMaxSize(LayoutElement le, RectTransform rt, Vector2 size) {
+        public static IEnumerator SettingMaxSize(this MonoBehaviour thisBehaviour, LayoutElement le, RectTransform rt, Vector2 size)
+        {
             //  Set to max width
-            if (size.x != 0 && rt.sizeDelta.x > size.x) {
+            if (size.x != 0 && rt.sizeDelta.x > size.x)
+            {
                 le.preferredWidth = size.x;
             }
             //  Set to max height
-            if (size.y != 0 && rt.sizeDelta.y > size.y) {
+            if (size.y != 0 && rt.sizeDelta.y > size.y)
+            {
                 le.preferredHeight = size.y;
             }
 

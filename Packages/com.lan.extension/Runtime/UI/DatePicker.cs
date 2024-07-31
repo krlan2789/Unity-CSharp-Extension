@@ -11,7 +11,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace LAN.UI {
-    public class DatePicker : CustomBehaviour {
+    public class DatePicker : MonoBehaviour {
         public enum PickerType {
             Custom = 0, AndroidNative
         }

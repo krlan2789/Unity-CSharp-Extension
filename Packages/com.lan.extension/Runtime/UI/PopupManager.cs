@@ -5,7 +5,6 @@ using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,7 +32,7 @@ namespace LAN.UI {
         public InputFieldValidation characterValidation;
     }
 
-    public class PopupManager : ExtendedBehaviour {
+    public class PopupManager : MonoBehaviour {
         #region Pop-Up Config
         [SerializeField]
         protected bool useEditorConfig = false;
@@ -69,43 +68,42 @@ namespace LAN.UI {
         protected bool isAnimating = false;
 
         protected GameObject panelTitle;
-        protected TMP_Text titleTxt;
+        protected Text titleTxt;
 
         private GameObject panelMessage;
-        private TMP_Text messageTxt;
+        private Text messageTxt;
 
         protected GameObject panelNotice;
         protected Text noticeTxt;
         protected string notice = "";
 
-        private Dictionary<string, TMP_InputField> createdIF;
+        private Dictionary<string, InputField> createdIF;
         protected Button outsidePopupBtn;
         protected List<GameObject> dontDestroyThis = new List<GameObject>();
         #endregion
 
         protected void Awake() {
-            //if (!useEditorConfig) {
-            //}
-            if (prefabButton == null) prefabButton = ((GameObject)LoadRes("Prefabs/ListItem/ListItemButton"));
-            if (prefabInputField == null) prefabInputField = ((GameObject)LoadRes("Prefabs/ListItem/InputDataObject"));
             string path = "Prefabs/PanelList/LIst" + listType.ToString();
-            if (listType != PopupListType.None && parentList == null) parentList = (Transform)LoadRes(path);
-            if (animManager == null) animManager = FindObject<AnimManager>("PanelPopup");
+            if (listType != PopupListType.None && parentList == null) parentList = (Transform)Resources.Load(path);
+            if (prefabButton == null) prefabButton = ((GameObject)Resources.Load("Prefabs/ListItem/ListItemButton"));
+            if (prefabInputField == null) prefabInputField = ((GameObject)Resources.Load("Prefabs/ListItem/InputDataObject"));
+            if (animManager == null) animManager = GetComponentInChildren<AnimManager>();
 
             foreach (Transform obj in animManager.transform) {
                 dontDestroyThis.Add(obj.gameObject);
             }
 
-            if (buttons == null) buttons = new List<PopupButton>();
-            if (createdIF == null) createdIF = new Dictionary<string, TMP_InputField>();
-            if (inputFields == null) inputFields = new Dictionary<string, PopupInputField>();
-            if (panelTitle == null) panelTitle = FindObject<Transform>("PanelPopup/PanelTitle").gameObject;
-            if (titleTxt == null) titleTxt = FindObject<TMP_Text>("PanelPopup/PanelTitle/Title");
-            if (panelMessage == null) panelMessage = FindObject<Transform>("PanelPopup/PanelMessage").gameObject;
-            if (messageTxt == null) messageTxt = FindObject<TMP_Text>("PanelPopup/PanelMessage/Message");
-            if (panelNotice == null) panelNotice = FindObject<Transform>("PanelPopup/PanelNotice").gameObject;
-            if (noticeTxt == null) noticeTxt = FindObject<Text>("PanelPopup/PanelNotice/Notice");
-            if (outsidePopupBtn == null) outsidePopupBtn = FindObject<Button>("Background");
+            buttons ??= new List<PopupButton>();
+            createdIF ??= new Dictionary<string, InputField>();
+            inputFields ??= new Dictionary<string, PopupInputField>();
+
+            if (panelTitle == null) panelTitle = this.FindObject<Transform>("PanelPopup/PanelTitle").gameObject;
+            if (titleTxt == null) titleTxt = this.FindObject<Text>("PanelPopup/PanelTitle/Title");
+            if (panelMessage == null) panelMessage = this.FindObject<Transform>("PanelPopup/PanelMessage").gameObject;
+            if (messageTxt == null) messageTxt = this.FindObject<Text>("PanelPopup/PanelMessage/Message");
+            if (panelNotice == null) panelNotice = this.FindObject<Transform>("PanelPopup/PanelNotice").gameObject;
+            if (noticeTxt == null) noticeTxt = this.FindObject<Text>("PanelPopup/PanelNotice/Notice");
+            if (outsidePopupBtn == null) outsidePopupBtn = this.FindObject<Button>("Background");
 
             if (outsidePopupBtn != null) outsidePopupBtn.onClick.AddListener(Hide);
             if (outsidePopupBtn != null) outsidePopupBtn.gameObject.SetActive(false);
@@ -136,7 +134,7 @@ namespace LAN.UI {
                     buttonAction = () => {
                         Hide(() => {
                             Dictionary<string, string> listValue = new Dictionary<string, string>();
-                            foreach (KeyValuePair<string, TMP_InputField> kvp in createdIF) {
+                            foreach (KeyValuePair<string, InputField> kvp in createdIF) {
                                 listValue.Add(kvp.Key, kvp.Value.text);
                             }
                             callback?.Invoke(listValue);
@@ -164,7 +162,7 @@ namespace LAN.UI {
         /// <param name="disableOutside"></param>
         public virtual void Show(string title = "", string message = "", GameObject prefabButton = null, PopupButton[] listButtons = null, PopupListType listType = PopupListType.None, bool disableOutside = false) {
             if (IsShowUp) return;
-            if (animManager == null) animManager = FindObject<AnimManager>("PanelPopUp");
+            if (animManager == null) animManager = this.FindObject<AnimManager>("PanelPopUp");
             if (animManager != null) {
                 foreach (Transform obj in animManager.transform) {
                     if (!dontDestroyThis.Contains(obj.gameObject)) {
@@ -183,7 +181,7 @@ namespace LAN.UI {
             if (listType != PopupListType.None) this.listType = listType;
             if (this.listType != PopupListType.None) {
                 string path = "Prefabs/List" + this.listType.ToString();
-                parentList = ((GameObject)LoadRes(path)).transform;
+                parentList = ((GameObject)Resources.Load(path)).transform;
             }
             if (parentList != null && this.listType == PopupListType.None) {
                 Destroy(parentList.gameObject);
@@ -217,7 +215,7 @@ namespace LAN.UI {
 
             if (parentList != null && animManager != null) {
                 //  Create parent for inputfields and buttons
-                parentList = CreateObject(parentList.gameObject, animManager.transform).transform;
+                parentList = parentList.gameObject.CreateObject(animManager.transform).transform;
                 //  Creating inputfields
                 createdIF.Clear();
                 if (inputFields.Count > 0) {
@@ -225,31 +223,31 @@ namespace LAN.UI {
                     foreach (KeyValuePair<string, PopupInputField> kvp in inputFields) {
                         switch (kvp.Value.characterValidation) {
                             case InputFieldValidation.Standard:
-                                prefabInputField = ((GameObject)LoadRes("Prefabs/ListItem/InputDataObject"));
+                                prefabInputField = ((GameObject)Resources.Load("Prefabs/ListItem/InputDataObject"));
                                 break;
                             case InputFieldValidation.Email:
-                                prefabInputField = ((GameObject)LoadRes("Prefabs/ListItem/InputEmailDataObject"));
+                                prefabInputField = ((GameObject)Resources.Load("Prefabs/ListItem/InputEmailDataObject"));
                                 break;
                             case InputFieldValidation.NumberOnly:
-                                prefabInputField = ((GameObject)LoadRes("Prefabs/ListItem/InputNumberOnlyDataObject"));
+                                prefabInputField = ((GameObject)Resources.Load("Prefabs/ListItem/InputNumberOnlyDataObject"));
                                 break;
                             case InputFieldValidation.Password:
-                                prefabInputField = ((GameObject)LoadRes("Prefabs/ListItem/InputPasswordDataObject"));
+                                prefabInputField = ((GameObject)Resources.Load("Prefabs/ListItem/InputPasswordDataObject"));
                                 break;
                         }
 
-                        Transform inputfield = CreateObject(prefabInputField, parentList).transform;
+                        Transform inputfield = prefabInputField.CreateObject(parentList).transform;
                         inputfield.name = kvp.Key;
                         VerticalLayoutGroup vlg = inputfield.GetComponent<VerticalLayoutGroup>();
                         vlg.padding = new RectOffset(32, 32, vlg.padding.top, 32);
                         //inputfield.Find("InputField/Text Area/Text").GetComponent<TMP_Text>().text = kvp.Value.defaultValue;
-                        inputfield.Find("InputField/Text Area/Placeholder").GetComponent<TMP_Text>().text = kvp.Value.placeholder;
+                        inputfield.Find("InputField/Text Area/Placeholder").GetComponent<Text>().text = kvp.Value.placeholder;
                         inputfield.Find("Label").gameObject.SetActive(false);
 
-                        TMP_InputField tmpIF = inputfield.Find("InputField").GetComponent<TMP_InputField>();
+                        InputField tmpIF = inputfield.Find("InputField").GetComponent<InputField>();
                         tmpIF.text = kvp.Value.defaultValue;
                         createdIF.Add(kvp.Key, tmpIF);
-                        FixVerticalLayout(inputfield);
+                        this.FixVerticalLayout(inputfield);
                     }
                 }
 
@@ -258,9 +256,9 @@ namespace LAN.UI {
                 if (prefabButton != null && buttons.Count > 0) {
                     foreach (PopupButton pb in buttons) {
                         //Debug.Log("Create popup button " + pb.buttonText);
-                        Button btn = CreateObject(prefabButton, parentList).GetComponent<Button>();
-                        btn.transform.Find("Text").GetComponent<TMP_Text>().text = pb.buttonText;
-                        btn.transform.Find("Text").GetComponent<TMP_Text>().color = pb.textColor;
+                        Button btn = prefabButton.CreateObject(parentList).GetComponent<Button>();
+                        btn.transform.Find("Text").GetComponent<Text>().text = pb.buttonText;
+                        btn.transform.Find("Text").GetComponent<Text>().color = pb.textColor;
                         btn.image.color = pb.buttonColor;
                         btn.onClick.AddListener(() => {
                             Hide(pb.buttonAction);
@@ -284,7 +282,7 @@ namespace LAN.UI {
 
         public virtual void ShowDetail(string title = "", string message = "", Transform[] contents = null, bool disableOutside = false) {
             if (IsShowUp) return;
-            if (animManager == null) animManager = FindObject<AnimManager>("PanelPopUp");
+            if (animManager == null) animManager = this.FindObject<AnimManager>("PanelPopUp");
             if (animManager != null) {
                 foreach (Transform obj in animManager.transform) {
                     if (!dontDestroyThis.Contains(obj.gameObject)) {
@@ -297,7 +295,7 @@ namespace LAN.UI {
             listType = PopupListType.BottomVertical;
             if (listType != PopupListType.None) {
                 string path = "Prefabs/List" + this.listType.ToString();
-                parentList = ((GameObject)LoadRes(path)).transform;
+                parentList = ((GameObject)Resources.Load(path)).transform;
             }
 
             //  Show or hide popup title
@@ -328,7 +326,7 @@ namespace LAN.UI {
             //  Create detail items
             if (parentList != null && animManager != null) {
                 //  Create parent for inputfields and buttons
-                parentList = CreateObject(parentList.gameObject, animManager.transform).transform;
+                parentList = parentList.gameObject.CreateObject(animManager.transform).transform;
 
                 if (contents.Length > 0) {
                     foreach (var content in contents) {
@@ -338,8 +336,8 @@ namespace LAN.UI {
                 }
 
                 if (prefabButton != null) {
-                    Button btn = CreateObject(prefabButton, parentList).GetComponent<Button>();
-                    btn.transform.Find("Text").GetComponent<TMP_Text>().text = "Tutup";
+                    Button btn = prefabButton.CreateObject(parentList).GetComponent<Button>();
+                    btn.transform.Find("Text").GetComponent<Text>().text = "Tutup";
                     //btn.transform.Find("Text").GetComponent<TMP_Text>().color = Color.white;
                     //btn.image.color = SalesTracker.Main.Tools.PaletteMaroon;
                     btn.onClick.AddListener(Hide);
@@ -430,8 +428,8 @@ namespace LAN.UI {
 
 
             //Debug.Log("ParentList: " + "Prefabs/PanelList/LIst" + listType.ToString());
-            if (parentList == null) parentList = (Transform)LoadRes("Prefabs/PanelList/LIst" + listType.ToString());
-            if (animManager == null) animManager = FindObject<AnimManager>("PanelPopUp");
+            if (parentList == null) parentList = (Transform)Resources.Load("Prefabs/PanelList/LIst" + listType.ToString());
+            if (animManager == null) animManager = this.FindObject<AnimManager>("PanelPopUp");
             if (parentList != null) foreach (Transform obj in parentList) Destroy(obj.gameObject);
 
             IsShowUp = false;

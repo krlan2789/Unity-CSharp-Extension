@@ -12,7 +12,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace LAN.UI {
-    public class DatePickerUIManager : CustomBehaviour {
+    public class DatePickerUIManager : MonoBehaviour {
         #region Static instance of this class
         private static DatePickerUIManager instance;
         public static DatePickerUIManager Instance {
@@ -44,7 +44,7 @@ namespace LAN.UI {
             DontDestroyOnLoad(gameObject);
             //if (instance.gameObject.GetInstanceID() != gameObject.GetInstanceID()) Destroy(instance.gameObject);
 
-            bgPanelBtn = FindObject<Button>("Background");
+            bgPanelBtn = this.FindObject<Button>("Background");
             popup = transform.Find("Popup");
 
             DateTime startDate = System.DateTime.Now;

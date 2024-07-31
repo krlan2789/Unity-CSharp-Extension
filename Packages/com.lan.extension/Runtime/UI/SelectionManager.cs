@@ -1,4 +1,5 @@
 using LAN.Animation;
+using LAN.Extension;
 using NaughtyAttributes;
 using System;
 using System.Collections;
@@ -8,14 +9,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace LAN.UI {
-    public class SelectionManager : ExtendedBehaviour {
+    public class SelectionManager : MonoBehaviour {
         #region Static instance from this class
         private static SelectionManager instance;
         public static SelectionManager Instance {
             get {
                 instance = instance ?? FindObjectOfType<SelectionManager>();
                 if (instance == null) {
-                    instance = Instantiate((GameObject)LoadResStatic("Prefabs/DontDestroy/CanvasSelection")).GetComponent<SelectionManager>();
+                    instance = Instantiate((GameObject)Resources.Load("Prefabs/DontDestroy/CanvasSelection")).GetComponent<SelectionManager>();
                 }
                 return instance;
             }
@@ -54,16 +55,16 @@ namespace LAN.UI {
 
         private void Awake() {
             if (instance != null) DontDestroyOnLoad(instance.gameObject);
-            popup = FindObject<Transform>("Popup").gameObject;
-            if (animManager == null) animManager = FindObject<AnimManager>("Popup/PanelPopup");
-            if (scrollRect == null) scrollRect = FindObject<ScrollRect>("Popup/PanelPopup/List");
-            if (panelTitle == null) panelTitle = FindObject<Transform>("Popup/PanelPopup/Title").gameObject;
-            if (titleTxt == null) titleTxt = FindObject<TMP_Text>("Popup/PanelPopup/Title/Text");
-            if (searchIF == null) searchIF = FindObject<TMP_InputField>("Popup/PanelPopup/Search/InputField");
-            if (parentList == null) parentList = FindObject<Transform>("Popup/PanelPopup/List/Content");
-            if (panelNotice == null) panelNotice = FindObject<Transform>("Popup/PanelPopup/Footer").gameObject;
-            if (noticeTxt == null) noticeTxt = FindObject<Text>("Popup/PanelPopup/Footer/Text");
-            if (outsidePopupBtn == null) outsidePopupBtn = FindObject<Button>("Popup/Background");
+            popup = this.FindObject<Transform>("Popup").gameObject;
+            if (animManager == null) animManager = this.FindObject<AnimManager>("Popup/PanelPopup");
+            if (scrollRect == null) scrollRect = this.FindObject<ScrollRect>("Popup/PanelPopup/List");
+            if (panelTitle == null) panelTitle = this.FindObject<Transform>("Popup/PanelPopup/Title").gameObject;
+            if (titleTxt == null) titleTxt = this.FindObject<TMP_Text>("Popup/PanelPopup/Title/Text");
+            if (searchIF == null) searchIF = this.FindObject<TMP_InputField>("Popup/PanelPopup/Search/InputField");
+            if (parentList == null) parentList = this.FindObject<Transform>("Popup/PanelPopup/List/Content");
+            if (panelNotice == null) panelNotice = this.FindObject<Transform>("Popup/PanelPopup/Footer").gameObject;
+            if (noticeTxt == null) noticeTxt = this.FindObject<Text>("Popup/PanelPopup/Footer/Text");
+            if (outsidePopupBtn == null) outsidePopupBtn = this.FindObject<Button>("Popup/Background");
         }
 
         private void Start() {
@@ -129,7 +130,7 @@ namespace LAN.UI {
 
         protected IEnumerator Showing() {
             scrollRect.verticalNormalizedPosition = 1;
-            yield return StartCoroutine(FixingVerticalLayout(parentList, true, .0001f));
+            yield return StartCoroutine(this.FixingVerticalLayout(parentList, true, .0001f));
             popup.SetActive(true);
 
             if (parentList != null) parentList.parent.GetComponent<ScrollRect>().normalizedPosition = Vector2.up;
@@ -149,7 +150,7 @@ namespace LAN.UI {
         /// </summary>
         public virtual void Hide() {
             try {
-                if (animManager == null) animManager = FindObject<AnimManager>("PanelPopUp");
+                if (animManager == null) animManager = this.FindObject<AnimManager>("PanelPopUp");
                 if (parentList != null) foreach (Transform obj in parentList) Destroy(obj.gameObject);
 
                 StartCoroutine(Hiding());

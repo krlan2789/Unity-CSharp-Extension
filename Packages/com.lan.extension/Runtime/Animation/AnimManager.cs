@@ -22,7 +22,7 @@ namespace LAN.Animation {
     }
 
     //[RequireComponent(typeof(CanvasGroup))]
-    public class AnimManager : CustomBehaviour {
+    public class AnimManager : MonoBehaviour {
 
         #region Animation Settings
         [Tooltip("If empty, will use this object")]

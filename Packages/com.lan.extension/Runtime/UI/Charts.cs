@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace LAN.UI {
-    public class Charts : CustomBehaviour {
+    public class Charts : MonoBehaviour {
         [System.Serializable]
         public class DataChart {
             public string key, label;

@@ -1,19 +1,23 @@
-using LAN;
 using LAN.Animation;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace LAN.UI {
-    public class CanvasPopup2 : CustomBehaviour {
+namespace LAN.UI
+{
+    public class CanvasPopup2 : MonoBehaviour
+    {
         #region Static instance of this class
         private static CanvasPopup2 instance;
-        public static CanvasPopup2 Instance {
-            get {
+        public static CanvasPopup2 Instance
+        {
+            get
+            {
                 instance = instance != null ? instance : FindObjectOfType<CanvasPopup2>();
-                if (instance == null) {
-                    instance = Instantiate((GameObject)LoadResStatic("Prefabs/DontDestroy/CanvasAttendence")).GetComponent<CanvasPopup2>();
+                if (instance == null)
+                {
+                    instance = Instantiate((GameObject)Resources.Load("Prefabs/DontDestroy/CanvasAttendence")).GetComponent<CanvasPopup2>();
                 }
                 return instance;
             }
@@ -30,30 +34,36 @@ namespace LAN.UI {
 
         public bool IsShow { get { return popup.gameObject.activeInHierarchy; } }
 
-        private void Awake() {
+        private void Awake()
+        {
             if (animManager == null) animManager = GetComponentInChildren<AnimManager>();
             if (popup == null) popup = transform.Find("Popup");
 
-            foreach (Transform obj in popup) {
+            foreach (Transform obj in popup)
+            {
                 panels.Add(obj);
             }
 
             Hide();
         }
 
-        public void Show(int index, bool preventToHide = false) {
+        public void Show(int index, bool preventToHide = false)
+        {
             this.preventToHide = preventToHide;
-            for (int a = 0; a < panels.Count; a++) {
+            for (int a = 0; a < panels.Count; a++)
+            {
                 panels[a].gameObject.SetActive(a == index);
             }
             StartCoroutine(Showing());
         }
 
-        private IEnumerator Showing() {
+        private IEnumerator Showing()
+        {
             while (isAnimating) yield return null;
             isAnimating = true;
             if (popup != null) popup.gameObject.SetActive(true);
-            if (hideBtn != null) {
+            if (hideBtn != null)
+            {
                 hideBtn.gameObject.SetActive(true);
                 hideBtn.interactable = !preventToHide;
             }
@@ -64,21 +74,25 @@ namespace LAN.UI {
             yield return null;
         }
 
-        public void Hide() {
-            for (int a = 0; a < panels.Count; a++) {
+        public void Hide()
+        {
+            for (int a = 0; a < panels.Count; a++)
+            {
                 panels[a].gameObject.SetActive(false);
             }
             preventToHide = false;
             StartCoroutine(Hiding());
         }
 
-        private IEnumerator Hiding() {
+        private IEnumerator Hiding()
+        {
             while (isAnimating) yield return null;
             isAnimating = true;
             animManager.SetScaleSetting(0, .15f, () => {
                 isAnimating = false;
                 if (popup != null) popup.gameObject.SetActive(false);
-                if (hideBtn != null) {
+                if (hideBtn != null)
+                {
                     hideBtn.gameObject.SetActive(false);
                     hideBtn.interactable = !preventToHide;
                 }

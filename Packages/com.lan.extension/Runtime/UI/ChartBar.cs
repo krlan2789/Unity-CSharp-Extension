@@ -28,8 +28,8 @@ namespace LAN.UI {
         }
 
         public void Create(string _targetLabel, ulong _targetValue, IEnumerable<DataChart> data) {
-            ClearChildren(parentBars);
-            ClearChildren(parentLabels);
+            this.ClearChildren(parentBars);
+            this.ClearChildren(parentLabels);
             graphLabelPair.Clear();
 
             //  To earn highest value
@@ -92,10 +92,10 @@ namespace LAN.UI {
         }
 
         private KeyValuePair<Transform, Image> CreateItem(string labelName) {
-            var newItemBar = CreateObject(barRef, parentBars);
+            var newItemBar = barRef.CreateObject(parentBars);
             newItemBar.name = labelName;
 
-            var newLabelText = CreateObject(labelRef, parentLabels);
+            var newLabelText = labelRef.CreateObject(parentLabels);
             newLabelText.name = labelName;
             newLabelText.GetComponentInChildren<Text>().text = labelName;
 

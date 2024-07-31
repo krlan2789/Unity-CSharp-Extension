@@ -1,5 +1,4 @@
-﻿using LAN.Helper;
-using System;
+﻿using System;
 using System.Net;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,7 +6,7 @@ using UnityEngine.UI;
 
 namespace LAN {
 
-    public class ImageManager : CustomBehaviour {
+    public class ImageManager : MonoBehaviour {
 
         #region Static atribut dari class ini
 
@@ -45,8 +44,6 @@ namespace LAN {
         /// <param name="image">GameObject to store collected image</param>
         /// <param name="Callback">Callback will invoke after image collected</param>
         private async void DownloadFile(string imagePath, Image image, Action Callback = null) {
-            LoadOnProgress();
-
             try {
                 using (WebClient client = new WebClient()) {
                     byte[] imageByte = await client.DownloadDataTaskAsync(imagePath);
@@ -60,7 +57,6 @@ namespace LAN {
 
             if (image != null && image.gameObject != null) image.gameObject.SetActive(true);
             Callback?.Invoke();
-            LoadIsDone();
         }
 
         /// <summary>

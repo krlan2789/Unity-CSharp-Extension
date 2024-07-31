@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1389562368156995606}
   - component: {fileID: 7502508598142411431}
   m_Layer: 5
-  m_Name: Date
+  m_Name: CalendarDate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
